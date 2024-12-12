@@ -1,11 +1,10 @@
-// app/settings.js
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeft, Image as ImageIcon, Sliders, Lock, Info } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 
-const Settings = () => {
+export default function Settings() {
   const router = useRouter();
   
   const settingsItems = [
@@ -60,7 +59,7 @@ const Settings = () => {
       </ScrollView>
     </SafeAreaView>
   );
-};
+}
 
 const s = StyleSheet.create({
   container: {
@@ -116,5 +115,3 @@ const s = StyleSheet.create({
     color: '#A3A3A3',
   },
 });
-
-export default Settings;
