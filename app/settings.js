@@ -1,11 +1,22 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+// app/settings.js
+import React, { useState, useEffect } from 'react';
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  TouchableOpacity, 
+  ScrollView,
+  Modal 
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ArrowLeft, Image as ImageIcon, Sliders, Lock, Info } from 'lucide-react-native';
+import { ArrowLeft, Image as ImageIcon, Sliders, Lock, Info, Globe, CheckCircle as Check } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function Settings() {
+const Settings = () => {
   const router = useRouter();
+  const [currentLang, setCurrentLang] = useState('en');
+  const [showLanguageModal, setShowLanguageModal] = useState(false);
   
   const settingsItems = [
     {
@@ -14,9 +25,10 @@ export default function Settings() {
       description: 'Set default image resolution',
     },
     {
-      icon: <Sliders size={24} color="#8B5CF6" />,
-      title: 'Advanced Settings',
-      description: 'Fine-tune generation parameters',
+      icon: <Globe size={24} color="#8B5CF6" />,
+      title: 'Language',
+      description: currentLang === 'en' ? 'English' : 'Türkçe',
+      onPress: () => setShowLanguageModal(true)
     },
     {
       icon: <Lock size={24} color="#8B5CF6" />,
@@ -29,6 +41,16 @@ export default function Settings() {
       description: 'App info and support',
     },
   ];
+
+  const changeLanguage = async (lang) => {
+    try {
+      await AsyncStorage.setItem('userLanguage', lang);
+      setCurrentLang(lang);
+      setShowLanguageModal(false);
+    } catch (error) {
+      console.error('Error saving language:', error);
+    }
+  };
 
   return (
     <SafeAreaView style={s.container}>
@@ -47,7 +69,7 @@ export default function Settings() {
           <TouchableOpacity 
             key={index} 
             style={s.settingItem}
-            onPress={() => console.log(`Pressed ${item.title}`)}
+            onPress={item.onPress || (() => console.log(`${item.title} pressed`))}
           >
             <View style={s.iconContainer}>{item.icon}</View>
             <View style={s.textContainer}>
@@ -57,9 +79,46 @@ export default function Settings() {
           </TouchableOpacity>
         ))}
       </ScrollView>
+
+      <Modal
+        visible={showLanguageModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowLanguageModal(false)}
+      >
+        <View style={s.modalOverlay}>
+          <View style={s.modalContent}>
+            <View style={s.modalHeader}>
+              <Text style={s.modalTitle}>Select Language</Text>
+              <TouchableOpacity 
+                onPress={() => setShowLanguageModal(false)}
+                style={s.closeButton}
+              >
+                <ArrowLeft color="#FFFFFF" size={24} />
+              </TouchableOpacity>
+            </View>
+
+            <TouchableOpacity 
+              style={[s.languageOption, currentLang === 'en' && s.selectedLanguage]} 
+              onPress={() => changeLanguage('en')}
+            >
+              <Text style={s.languageText}>English</Text>
+              {currentLang === 'en' && <Check color="#8B5CF6" size={20} />}
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={[s.languageOption, currentLang === 'tr' && s.selectedLanguage]} 
+              onPress={() => changeLanguage('tr')}
+            >
+              <Text style={s.languageText}>Türkçe</Text>
+              {currentLang === 'tr' && <Check color="#8B5CF6" size={20} />}
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
-}
+};
 
 const s = StyleSheet.create({
   container: {
@@ -114,4 +173,46 @@ const s = StyleSheet.create({
     fontSize: 14,
     color: '#A3A3A3',
   },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: '#262626',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  modalTitle: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  closeButton: {
+    padding: 5,
+  },
+  languageOption: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  selectedLanguage: {
+    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+  },
+  languageText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+  },
 });
+
+export default Settings;

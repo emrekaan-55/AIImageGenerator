@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Settings, Menu } from 'lucide-react-native';
 
+
 // Components
 import StyleSelector from './components/StyleSelector';
 import PromptInput from './components/PromptInput';
@@ -13,6 +14,7 @@ import ProModal from './components/ProModal';
 import LoadingModal from './components/LoadingModal';
 import ResultModal from './components/ResultModal';
 import DrawerMenu from './components/DrawerMenu';
+import i18n from './utils/i18n';
 
 // Services
 import { generateImage } from './services/api';
@@ -26,6 +28,7 @@ export default function Home() {
   const [showResult, setShowResult] = useState(false);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const router = useRouter();
+  const [currentLocale, setCurrentLocale] = useState(i18n.locale);
 
   const handleCreatePress = async () => {
     if (!prompt.trim()) {
@@ -70,34 +73,43 @@ export default function Home() {
 
       {/* Header */}
       <View style={s.header}>
-        <TouchableOpacity
+        <TouchableOpacity 
           onPress={() => setIsMenuVisible(true)}
           style={s.menuButton}
         >
           <Menu color="#FFFFFF" size={24} />
         </TouchableOpacity>
-        <Text style={s.headerTitle}>AI Image Generator</Text>
+        <Text style={s.headerTitle}>{i18n.t('appName')}</Text>
         <ProButton onPress={handleProPress} />
       </View>
 
       <ScrollView style={s.content}>
-        {/* Prompt Input */}
-        <PromptInput
+        <PromptInput 
           value={prompt}
           onChangeText={setPrompt}
-
+          placeholder={i18n.t('prompt.placeholder')}
         />
 
         {/* Style Selector */}
-        <StyleSelector
+        <StyleSelector 
+          title={i18n.t('styles.title')}
           selectedStyle={selectedStyle}
           onStyleSelect={setSelectedStyle}
+          styles={[
+            { id: 1, name: i18n.t('styles.realistic'), icon: '🖼' },
+            { id: 2, name: i18n.t('styles.artistic'), icon: '🎨' },
+            { id: 3, name: i18n.t('styles.anime'), icon: '✨' },
+            { id: 4, name: i18n.t('styles.threeD'), icon: '💫' },
+            { id: 5, name: i18n.t('styles.digital'), icon: '🎮' },
+          ]}
         />
 
+
         {/* Create Button */}
-        <CreateButton
+        <CreateButton 
           onPress={handleCreatePress}
           disabled={!prompt.trim() || !selectedStyle}
+          title={i18n.t('buttons.create')}
         />
       </ScrollView>
 
