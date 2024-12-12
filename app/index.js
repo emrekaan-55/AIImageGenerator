@@ -1,21 +1,24 @@
 // app/index.js
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, StatusBar, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { Settings, Menu } from 'lucide-react-native';
 
 // Components
 import StyleSelector from './components/StyleSelector';
 import PromptInput from './components/PromptInput';
 import ProButton from './components/ProButton';
 import CreateButton from './components/CreateButton';
-import ProModal from './components/ProModal'; 
+import ProModal from './components/ProModal';
+import DrawerMenu from './components/DrawerMenu';
 
 export default function Home() {
   const [prompt, setPrompt] = useState('');
   const [selectedStyle, setSelectedStyle] = useState(null);
   const [isProModalVisible, setIsProModalVisible] = useState(false);
   const router = useRouter();
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
 
   const handleCreatePress = () => {
     console.log('Creating image with:', { prompt, selectedStyle });
@@ -37,16 +40,22 @@ export default function Home() {
    
       {/* Header */}
       <View style={s.header}>
-        <Text style={s.headerTitle}>AI Image Generator</Text>
-        <ProButton onPress={handleProPress} />
-      </View>
+  <TouchableOpacity 
+    onPress={() => setIsMenuVisible(true)}
+    style={s.menuButton}
+  >
+    <Menu color="#FFFFFF" size={24} />
+  </TouchableOpacity>
+  <Text style={s.headerTitle}>AI Image Generator</Text>
+  <ProButton onPress={handleProPress} />
+</View>
 
       <ScrollView style={s.content}>
         {/* Prompt Input */}
         <PromptInput 
           value={prompt}
           onChangeText={setPrompt}
-          onSettingsPress={handleSettingsPress}
+          
         />
 
         {/* Style Selector */}
@@ -62,6 +71,12 @@ export default function Home() {
         />
       </ScrollView>
 
+      <DrawerMenu 
+  visible={isMenuVisible} 
+  onClose={() => setIsMenuVisible(false)}
+  onSettingsPress={handleSettingsPress}
+/>
+
       <ProModal
   visible={isProModalVisible}
   onClose={() => setIsProModalVisible(false)}
@@ -73,6 +88,9 @@ export default function Home() {
 }
 
 const s = StyleSheet.create({
+  menuButton: {
+    padding: 8,
+  },
   container: {
     flex: 1,
     backgroundColor: '#1a1a1a',
@@ -85,11 +103,22 @@ const s = StyleSheet.create({
     paddingVertical: 12,
   },
   headerTitle: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#FFFFFF',
+    flex: 1,
   },
   content: {
     flex: 1,
   },
+  headerButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  settingsButton: {
+    padding: 8,
+  }
+
+  
 });

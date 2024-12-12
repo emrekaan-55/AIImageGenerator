@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { Settings } from 'lucide-react-native';
+import { View, TextInput, StyleSheet } from 'react-native';
 
-const PromptInput = ({ value, onChangeText, onSettingsPress }) => {
+const PromptInput = ({ value, onChangeText }) => { // onSettingsPress'i kaldırdık
   return (
     <View style={s.inputContainer}>
       <TextInput
@@ -13,9 +12,6 @@ const PromptInput = ({ value, onChangeText, onSettingsPress }) => {
         value={value}
         onChangeText={onChangeText}
       />
-      <TouchableOpacity style={s.settingsButton} onPress={onSettingsPress}>
-        <Settings color="#8B5CF6" size={24} />
-      </TouchableOpacity>
     </View>
   );
 };
@@ -33,12 +29,7 @@ const s = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     minHeight: 80,
-  },
-  settingsButton: {
-    position: 'absolute',
-    right: 16,
-    top: 16,
-  },
+  }
 });
 
 export default PromptInput;
