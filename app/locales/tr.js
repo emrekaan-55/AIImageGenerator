@@ -1,25 +1,21 @@
 export default {
-    appName: 'Yapay Zeka Görsel Oluşturucu',
-    prompt: {
-      placeholder: 'Fikrinizi buraya yazın...'
-    },
-    styles: {
-      title: 'Stil Seçin',
-      realistic: 'Gerçekçi',
-      artistic: 'Sanatsal',
-      anime: 'Anime',
-      threeD: '3B',
-      digital: 'Dijital'
-    },
-    buttons: {
-      create: 'Oluştur',
-      pro: 'Pro',
-      settings: 'Ayarlar'
-    },
-    menu: {
-      home: 'Ana Sayfa',
-      myImages: 'Görsellerim',
-      settings: 'Ayarlar',
-      about: 'Hakkında'
-    }
-  };
+  appName: 'Yapay Zeka Görsel Oluşturucu',
+  settings: {
+    title: 'Ayarlar',
+    language: 'Dil',
+    selectLanguage: 'Dil Seçin',
+    imageQuality: 'Görsel Kalitesi',
+    imageQualityDesc: 'Varsayılan çözünürlüğü ayarla',
+    privacy: 'Gizlilik',
+    privacyDesc: 'Veri ve gizlilik ayarları',
+    about: 'Hakkında',
+    aboutDesc: 'Uygulama bilgisi ve destek'
+  },
+  prompt: {
+    placeholder: 'Fikrinizi buraya yazın...'
+  },
+  buttons: {
+    create: 'Oluştur',
+    pro: 'Pro'
+  }
+};

@@ -1,28 +1,23 @@
-// app/locales/en.js (İngilizce)
 export default {
-    appName: 'AI Image Generator',
-    prompt: {
-      placeholder: 'Type your idea here...'
-    },
-    styles: {
-      title: 'Choose Style',
-      realistic: 'Realistic',
-      artistic: 'Artistic',
-      anime: 'Anime',
-      threeD: '3D',
-      digital: 'Digital'
-    },
-    buttons: {
-      create: 'Create',
-      pro: 'Pro',
-      settings: 'Settings'
-    },
-    menu: {
-      home: 'Home',
-      myImages: 'My Images',
-      settings: 'Settings',
-      about: 'About'
-    }
-  };
+  appName: 'AI Image Generator',
+  settings: {
+    title: 'Settings',
+    language: 'Language',
+    selectLanguage: 'Select Language',
+    imageQuality: 'Image Quality',
+    imageQualityDesc: 'Set default image resolution',
+    privacy: 'Privacy',
+    privacyDesc: 'Manage your data and privacy',
+    about: 'About',
+    aboutDesc: 'App info and support'
+  },
+  prompt: {
+    placeholder: 'Type your idea here...'
+  },
+  buttons: {
+    create: 'Create',
+    pro: 'Pro'
+  }
+};
   
   
