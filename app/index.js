@@ -1,19 +1,11 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
-  StatusBar,
-} from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Settings } from 'lucide-react-native';
 
-const MainScreen = () => {
-  const [prompt, setPrompt] = useState('');
-  const [selectedStyle, setSelectedStyle] = useState(null);
+export default function Home() {
+  const [prompt, setPrompt] = React.useState('');
+  const [selectedStyle, setSelectedStyle] = React.useState(null);
 
   const styles = [
     { id: 1, name: 'Realistic', icon: '🖼' },
@@ -27,7 +19,6 @@ const MainScreen = () => {
     <SafeAreaView style={s.container}>
       <StatusBar barStyle="light-content" />
       
-      {/* Header */}
       <View style={s.header}>
         <Text style={s.headerTitle}>AI Image Generator</Text>
         <TouchableOpacity style={s.proButton}>
@@ -36,7 +27,6 @@ const MainScreen = () => {
       </View>
 
       <ScrollView style={s.content}>
-        {/* Input Section */}
         <View style={s.inputContainer}>
           <TextInput
             style={s.textInput}
@@ -51,21 +41,13 @@ const MainScreen = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Style Selector */}
         <View style={s.styleSection}>
           <Text style={s.sectionTitle}>Choose Style</Text>
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false} 
-            style={s.styleScroll}
-          >
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={s.styleScroll}>
             {styles.map((style) => (
               <TouchableOpacity
                 key={style.id}
-                style={[
-                  s.styleItem,
-                  selectedStyle === style.id && s.selectedStyle
-                ]}
+                style={[s.styleItem, selectedStyle === style.id && s.selectedStyle]}
                 onPress={() => setSelectedStyle(style.id)}
               >
                 <Text style={s.styleIcon}>{style.icon}</Text>
@@ -75,17 +57,13 @@ const MainScreen = () => {
           </ScrollView>
         </View>
 
-        {/* Create Button */}
-        <TouchableOpacity 
-          style={s.createButton}
-          onPress={() => console.log('Creating with prompt:', prompt)}
-        >
+        <TouchableOpacity style={s.createButton}>
           <Text style={s.createButtonText}>Create</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
-};
+}
 
 const s = StyleSheet.create({
   container: {
@@ -179,6 +157,6 @@ const s = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-});
+}); 
 
-export default MainScreen;
+
