@@ -1,146 +1,47 @@
 // app/index.js
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, StatusBar, TouchableOpacity, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { Settings, Menu } from 'lucide-react-native';
-import i18n, { initializeLanguage } from './utils/i18n';
-import supabase from './lib/supabaseClient';
+import { StatusBar } from 'expo-status-bar';
+import { LogIn, UserPlus } from 'lucide-react-native';
 
-// Components
-import StyleSelector from './components/StyleSelector';
-import PromptInput from './components/PromptInput';
-import ProButton from './components/ProButton';
-import CreateButton from './components/CreateButton';
-import ProModal from './components/ProModal';
-import DrawerMenu from './components/DrawerMenu';
-import LoadingModal from './components/LoadingModal';
-import ResultModal from './components/ResultModal';
-import Login from './components/Login';
-import Register from './components/Register';
-import Profile from './components/Profile';
-
-// Services
-import { generateImage } from './services/api';
-
-export default function Home() {
-  const [prompt, setPrompt] = useState('');
-  const [selectedStyle, setSelectedStyle] = useState(null);
-  const [isProModalVisible, setIsProModalVisible] = useState(false);
-  const [isMenuVisible, setIsMenuVisible] = useState(false);
+export default function Index() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [generatedImageUrl, setGeneratedImageUrl] = useState(null);
-  const [showResult, setShowResult] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    initializeLanguage();
-
-    const checkAuth = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setIsAuthenticated(!!user);
-    };
-
-    checkAuth();
-  }, []);
-
-  const handleCreatePress = async () => {
-    if (!prompt.trim()) {
-      Alert.alert('Error', 'Please enter a prompt');
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-      console.log('Starting image generation...');
-      const imageUrl = await generateImage(prompt, selectedStyle);
-      console.log('Generated URL:', imageUrl);
-      setGeneratedImageUrl(imageUrl);
-      setShowResult(true);
-    } catch (error) {
-      Alert.alert('Error', 'Failed to generate image. Please try again.');
-      console.error('Error in handleCreatePress:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleProPress = () => {
-    setIsProModalVisible(true);
-  };
-
-  const handleSettingsPress = () => {
-    router.push('/settings');
-  };
 
   return (
     <SafeAreaView style={s.container}>
-      <StatusBar barStyle="light-content" />
-  
+      <StatusBar style="light" />
+      
       <View style={s.header}>
-        <TouchableOpacity 
-          onPress={() => setIsMenuVisible(true)}
-          style={s.menuButton}
-        >
-          <Menu color="#FFFFFF" size={24} />
-        </TouchableOpacity>
-        <Text style={s.headerTitle}>{i18n.t('appName')}</Text>
-        <ProButton onPress={handleProPress} />
+        <Text style={s.title}>AI Image Generator</Text>
+        <Text style={s.subtitle}>Create amazing images with AI</Text>
       </View>
 
-      <ScrollView style={s.content}>
-        {!isAuthenticated ? (
-          <>
-            <Login />
-            <Register />
-          </>
-        ) : (
-          <>
-            <Profile />
-            <PromptInput 
-              value={prompt}
-              onChangeText={setPrompt}
-              placeholder={i18n.t('prompt.placeholder')}
-            />
+      <View style={s.buttonsContainer}>
+        <TouchableOpacity 
+          style={[s.button, s.primaryButton]}
+          onPress={() => router.push('/login')}
+        >
+          <LogIn color="#FFFFFF" size={20} style={s.buttonIcon} />
+          <Text style={s.buttonText}>Login</Text>
+        </TouchableOpacity>
 
-            <StyleSelector 
-              selectedStyle={selectedStyle}
-              onStyleSelect={setSelectedStyle}
-            />
-         
-            <CreateButton 
-              onPress={handleCreatePress}
-              disabled={!prompt.trim() || !selectedStyle}
-            />
-          </>
-        )}
-      </ScrollView>
+        <TouchableOpacity 
+          style={[s.button, s.secondaryButton]}
+          onPress={() => router.push('/register')}
+        >
+          <UserPlus color="#8B5CF6" size={20} style={s.buttonIcon} />
+          <Text style={[s.buttonText, s.secondaryButtonText]}>Sign Up</Text>
+        </TouchableOpacity>
 
-      <DrawerMenu 
-        visible={isMenuVisible} 
-        onClose={() => setIsMenuVisible(false)}
-        onSettingsPress={handleSettingsPress}
-      />
-
-      <ProModal
-        visible={isProModalVisible}
-        onClose={() => setIsProModalVisible(false)}
-      />
-
-      <LoadingModal visible={isLoading} />
-
-      <ResultModal
-        visible={showResult}
-        imageUrl={generatedImageUrl}
-        onClose={() => {
-          setShowResult(false);
-          setGeneratedImageUrl(null);
-        }}
-        onSave={() => {
-          console.log('Saving image:', generatedImageUrl);
-        }}
-      />
+        <TouchableOpacity 
+          style={[s.button, s.skipButton]}
+          onPress={() => router.push('/home')}
+        >
+          <Text style={[s.buttonText, s.skipButtonText]}>Continue without account</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
@@ -149,31 +50,61 @@ const s = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#1a1a1a',
+    padding: 20,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    marginTop: 60,
+    marginBottom: 40,
   },
-  headerTitle: {
-    fontSize: 24,
+  title: {
+    fontSize: 32,
     fontWeight: 'bold',
     color: '#FFFFFF',
+    marginBottom: 12,
   },
-  content: {
+  subtitle: {
+    fontSize: 16,
+    color: '#A3A3A3',
+    textAlign: 'center',
+  },
+  buttonsContainer: {
     flex: 1,
+    justifyContent: 'center',
+    gap: 16,
   },
-  headerButtons: {
+  button: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    justifyContent: 'center',
+    padding: 16,
+    borderRadius: 12,
+    gap: 8,
   },
-  settingsButton: {
-    padding: 8,
+  primaryButton: {
+    backgroundColor: '#8B5CF6',
   },
-  menuButton: {
-    padding: 8,
-  }
+  secondaryButton: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: '#8B5CF6',
+  },
+  skipButton: {
+    backgroundColor: 'transparent',
+    marginTop: 20,
+  },
+  buttonIcon: {
+    marginRight: 8,
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  secondaryButtonText: {
+    color: '#8B5CF6',
+  },
+  skipButtonText: {
+    color: '#666666',
+  },
 });

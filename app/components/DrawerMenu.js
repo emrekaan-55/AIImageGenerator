@@ -1,14 +1,35 @@
-// app/components/DrawerMenu.js
 import React from 'react';
 import { Modal, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { X, Home, Image, Settings, Info } from 'lucide-react-native';
+import { ArrowLeft, Home, Image, Settings, LogIn, UserPlus, Info, X } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
 
 const DrawerMenu = ({ visible, onClose, onSettingsPress }) => {
+  const router = useRouter();
+
   const menuItems = [
-    { icon: <Home size={24} color="#FFFFFF" />, title: 'Home' },
-    { icon: <Image size={24} color="#FFFFFF" />, title: 'My Images' },
-    { icon: <Settings size={24} color="#FFFFFF" />, title: 'Settings', onPress: onSettingsPress },
-    { icon: <Info size={24} color="#FFFFFF" />, title: 'About' },
+    { 
+      icon: <Home size={24} color="#FFFFFF" />, 
+      title: 'Home',
+      onPress: () => router.push('/')
+    },
+    { 
+      icon: <Image size={24} color="#FFFFFF" />, 
+      title: 'My Images'
+    },
+    { 
+      icon: <Settings size={24} color="#FFFFFF" />, 
+      title: 'Settings', 
+      onPress: onSettingsPress 
+    },
+    { 
+      icon: <LogIn size={24} color="#FFFFFF" />, 
+      title: 'Login / Register',
+      onPress: () => router.push('/auth')
+    },
+    { 
+      icon: <Info size={24} color="#FFFFFF" />, 
+      title: 'About' 
+    },
   ];
 
   return (
@@ -29,7 +50,7 @@ const DrawerMenu = ({ visible, onClose, onSettingsPress }) => {
           {menuItems.map((item, index) => (
             <TouchableOpacity 
               key={index} 
-              style={s.menuItem}
+              style={[s.menuItem, item.onPress && s.clickableItem]}
               onPress={() => {
                 if (item.onPress) {
                   item.onPress();
@@ -39,7 +60,9 @@ const DrawerMenu = ({ visible, onClose, onSettingsPress }) => {
                 onClose();
               }}
             >
-              {item.icon}
+              <View style={s.iconContainer}>
+                {item.icon}
+              </View>
               <Text style={s.menuItemText}>{item.title}</Text>
             </TouchableOpacity>
           ))}
@@ -73,11 +96,24 @@ const s = StyleSheet.create({
     padding: 16,
     borderRadius: 12,
     marginBottom: 8,
+    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+  },
+  clickableItem: {
+    backgroundColor: 'rgba(139, 92, 246, 0.2)',
+  },
+  iconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#8B5CF6',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
   },
   menuItemText: {
     color: '#FFFFFF',
     fontSize: 16,
-    marginLeft: 16,
+    fontWeight: '500',
   },
 });
 
