@@ -1,4 +1,3 @@
-
 // app/home.js
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, StatusBar, TouchableOpacity, Alert } from 'react-native';
@@ -106,6 +105,7 @@ export default function Home() {
         visible={isMenuVisible} 
         onClose={() => setIsMenuVisible(false)}
         onSettingsPress={handleSettingsPress}
+        isAuthenticated={isAuthenticated}
       />
 
       <ProModal
