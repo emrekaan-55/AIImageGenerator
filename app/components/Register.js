@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import supabase from './supabaseClient';
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import supabase from '../lib/supabaseClient';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -22,25 +23,47 @@ const Register = () => {
   };
 
   return (
-    <div>
-      <h2>Kayıt Ol</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
+    <View style={styles.container}>
+      <Text style={styles.heading}>Kayıt Ol</Text>
+      <View>
+        <TextInput
+          style={styles.input}
           placeholder="E-posta"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
         />
-        <input
-          type="password"
+        <TextInput
+          style={styles.input}
           placeholder="Şifre"
+          secureTextEntry
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChangeText={setPassword}
         />
-        <button type="submit">Kayıt Ol</button>
-      </form>
-    </div>
+        <Button title="Kayıt Ol" onPress={handleSubmit} />
+      </View>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+  },
+});
 
 export default Register;

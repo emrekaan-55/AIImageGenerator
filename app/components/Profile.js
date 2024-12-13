@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import supabase from './supabaseClient';
+import { View, Text, StyleSheet } from 'react-native';
+import supabase from '../lib/supabaseClient';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -14,18 +15,38 @@ const Profile = () => {
   }, []);
 
   return (
-    <div>
-      <h2>Profil</h2>
+    <View style={styles.container}>
+      <Text style={styles.heading}>Profil</Text>
       {user ? (
-        <div>
-          <p>E-posta: {user.email}</p>
+        <View>
+          <Text style={styles.info}>E-posta: {user.email}</Text>
           {/* Diğer kullanıcı bilgilerini burada gösterebilirsiniz */}
-        </div>
+        </View>
       ) : (
-        <p>Kullanıcı bilgileri yükleniyor...</p>
+        <Text style={styles.loading}>Kullanıcı bilgileri yükleniyor...</Text>
       )}
-    </div>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  info: {
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  loading: {
+    fontSize: 18,
+    color: 'gray',
+  },
+});
 
 export default Profile;

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import supabase from './supabaseClient';
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import supabase from '../lib/supabaseClient';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -22,25 +23,41 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h2>Giriş Yap</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
+    <View>
+      <Text style={styles.heading}>Giriş Yap</Text>
+      <View>
+        <TextInput
+          style={styles.input}
           placeholder="E-posta"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChangeText={setEmail}
         />
-        <input
-          type="password"
+        <TextInput
+          style={styles.input}
           placeholder="Şifre"
+          secureTextEntry
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChangeText={setPassword}
         />
-        <button type="submit">Giriş Yap</button>
-      </form>
-    </div>
+        <Button title="Giriş Yap" onPress={handleSubmit} />
+      </View>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  heading: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+  },
+});
 
 export default Login;
