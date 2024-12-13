@@ -7,6 +7,29 @@ import { StatusBar } from 'expo-status-bar';
 import { LogIn, UserPlus } from 'lucide-react-native';
 
 export default function Index() {
+
+
+
+
+  const LoginScreen = ({ navigation }) => {
+    // ...
+  
+    const handleContinueWithoutAccount = () => {
+      navigation.navigate('Home'); // Ana sayfaya yönlendirme yapılıyor
+    };
+  
+    return (
+      <View>
+        {/* ... */}
+        <TouchableOpacity onPress={handleContinueWithoutAccount}>
+          <Text>Continue without account</Text>
+        </TouchableOpacity>
+        {/* ... */}
+      </View>
+    );
+  };
+
+
   const router = useRouter();
 
   return (
