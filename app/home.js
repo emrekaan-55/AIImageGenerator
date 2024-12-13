@@ -1,155 +1,113 @@
 // app/home.js
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, StatusBar, TouchableOpacity, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Settings, Menu } from 'lucide-react-native';
-import i18n, { initializeLanguage } from './utils/i18n';
-import supabase from './lib/supabaseClient';
-
-// Components
-import StyleSelector from './components/StyleSelector';
-import PromptInput from './components/PromptInput';
-import ProButton from './components/ProButton';
-import CreateButton from './components/CreateButton';
-import ProModal from './components/ProModal';
-import DrawerMenu from './components/DrawerMenu';
-import LoadingModal from './components/LoadingModal';
-import ResultModal from './components/ResultModal';
-import Profile from './components/Profile';
-
-// Services
-import { generateImage } from './services/api';
+import { Menu } from 'lucide-react-native';
+import DrawerMenu from '../components/DrawerMenu';
+import ImageGenerator from '../components/ImageGenerator';
+import { StatusBar } from 'expo-status-bar';
+import { supabase } from '../lib/supabase';
 
 export default function Home() {
-  const [prompt, setPrompt] = useState('');
-  const [selectedStyle, setSelectedStyle] = useState(null);
-  const [isProModalVisible, setIsProModalVisible] = useState(false);
-  const [isMenuVisible, setIsMenuVisible] = useState(false);
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [generatedImageUrl, setGeneratedImageUrl] = useState(null);
-  const [showResult, setShowResult] = useState(false);
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    initializeLanguage();
-    checkAuth();
+    checkUser();
+    
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN') {
+        setIsAuthenticated(true);
+        setUser(session.user);
+      }
+      if (event === 'SIGNED_OUT') {
+        setIsAuthenticated(false);
+        setUser(null);
+      }
+    });
+
+    return () => {
+      authListener?.unsubscribe();
+    };
   }, []);
 
-  const checkAuth = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    setIsAuthenticated(!!user);
-  };
-
-  const handleCreatePress = async () => {
-    if (!prompt.trim()) {
-      Alert.alert('Error', 'Please enter a prompt');
-      return;
-    }
-
+  const checkUser = async () => {
     try {
-      setIsLoading(true);
-      console.log('Starting image generation...');
-      const imageUrl = await generateImage(prompt, selectedStyle);
-      setGeneratedImageUrl(imageUrl);
-      setShowResult(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      setIsAuthenticated(!!user);
+      setUser(user);
     } catch (error) {
-      Alert.alert('Error', 'Failed to generate image. Please try again.');
-      console.error('Error in handleCreatePress:', error);
-    } finally {
-      setIsLoading(false);
+      console.error('Auth check error:', error);
     }
-  };
-
-  const handleProPress = () => {
-    setIsProModalVisible(true);
   };
 
   const handleSettingsPress = () => {
+    setIsMenuVisible(false);
     router.push('/settings');
   };
 
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      setIsMenuVisible(false);
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
   return (
-    <SafeAreaView style={s.container}>
-      <StatusBar barStyle="light-content" />
-  
-      <View style={s.header}>
+    <View style={styles.container}>
+      <StatusBar style="light" />
+      
+      {/* Header */}
+      <View style={styles.header}>
         <TouchableOpacity 
           onPress={() => setIsMenuVisible(true)}
-          style={s.menuButton}
+          style={styles.menuButton}
         >
-          <Menu color="#FFFFFF" size={24} />
+          <Menu size={24} color="#FFFFFF" />
         </TouchableOpacity>
-        <Text style={s.headerTitle}>{i18n.t('appName')}</Text>
-        <ProButton onPress={handleProPress} />
       </View>
 
-      <ScrollView style={s.content}>
-        <PromptInput 
-          value={prompt}
-          onChangeText={setPrompt}
-          placeholder={i18n.t('prompt.placeholder')}
-        />
-        <StyleSelector 
-          selectedStyle={selectedStyle}
-          onStyleSelect={setSelectedStyle}
-        />
-        <CreateButton 
-          onPress={handleCreatePress}
-          disabled={!prompt.trim() || !selectedStyle}
-        />
-      </ScrollView>
+      {/* Main Content */}
+      <View style={styles.content}>
+        <ImageGenerator />
+      </View>
 
+      {/* Drawer Menu */}
       <DrawerMenu 
         visible={isMenuVisible} 
         onClose={() => setIsMenuVisible(false)}
+        isAuthenticated={isAuthenticated}
+        userInfo={user}
         onSettingsPress={handleSettingsPress}
+        onLogout={handleLogout}
       />
-
-      <ProModal
-        visible={isProModalVisible}
-        onClose={() => setIsProModalVisible(false)}
-      />
-
-      <LoadingModal visible={isLoading} />
-
-      <ResultModal
-        visible={showResult}
-        imageUrl={generatedImageUrl}
-        onClose={() => {
-          setShowResult(false);
-          setGeneratedImageUrl(null);
-        }}
-        onSave={() => {
-          console.log('Saving image:', generatedImageUrl);
-        }}
-      />
-    </SafeAreaView>
+    </View>
   );
 }
 
-const s = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: '#1A1A1A',
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    paddingTop: 48,
     paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-  },
-  content: {
-    flex: 1,
+    paddingBottom: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#262626',
   },
   menuButton: {
     padding: 8,
-  }
+  },
+  content: {
+    flex: 1,
+    padding: 16,
+  },
 });

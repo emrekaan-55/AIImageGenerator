@@ -1,71 +1,94 @@
 import React from 'react';
-import { Modal, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { ArrowLeft, Home, Image, Settings, LogIn, UserPlus, Info, X } from 'lucide-react-native';
+import { Modal, View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import { X, Image, Settings, Globe, Info, LogOut, LogIn } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 
-const DrawerMenu = ({ visible, onClose, onSettingsPress }) => {
+const DrawerMenu = ({ visible, onClose, isAuthenticated, userInfo }) => {
   const router = useRouter();
 
-  const menuItems = [
-    { 
-      icon: <Home size={24} color="#FFFFFF" />, 
-      title: 'Home',
-      onPress: () => router.push('/')
-    },
-    { 
-      icon: <Image size={24} color="#FFFFFF" />, 
-      title: 'My Images'
-    },
-    { 
-      icon: <Settings size={24} color="#FFFFFF" />, 
-      title: 'Settings', 
-      onPress: onSettingsPress 
-    },
-    { 
-      icon: <LogIn size={24} color="#FFFFFF" />, 
-      title: 'Login / Register',
-      onPress: () => router.push('/auth')
-    },
-    { 
-      icon: <Info size={24} color="#FFFFFF" />, 
-      title: 'About' 
-    },
-  ];
+  const renderAuthenticatedContent = () => (
+    <>
+      <View style={s.userInfo}>
+        <Text style={s.userName}>{userInfo?.name || 'Kullanıcı Adı'}</Text>
+        <Text style={s.userEmail}>{userInfo?.email || 'kullanici@mail.com'}</Text>
+      </View>
+      
+      <TouchableOpacity style={s.menuItem}>
+        <Image size={24} color="#FFFFFF" />
+        <Text style={s.menuText}>My Images</Text>
+      </TouchableOpacity>
+      
+      <TouchableOpacity style={s.menuItem}>
+        <Settings size={24} color="#FFFFFF" />
+        <Text style={s.menuText}>Settings</Text>
+      </TouchableOpacity>
+      
+      <TouchableOpacity style={s.menuItem}>
+        <Globe size={24} color="#FFFFFF" />
+        <Text style={s.menuText}>Web Site</Text>
+      </TouchableOpacity>
+      
+      <TouchableOpacity style={s.menuItem}>
+        <Info size={24} color="#FFFFFF" />
+        <Text style={s.menuText}>Hakkında</Text>
+      </TouchableOpacity>
+      
+      <TouchableOpacity style={s.logoutButton}>
+        <LogOut size={24} color="#FFFFFF" />
+        <Text style={s.logoutText}>Hesaptan Çıkış</Text>
+      </TouchableOpacity>
+    </>
+  );
+
+  const renderUnauthenticatedContent = () => (
+    <>
+      <TouchableOpacity 
+        style={s.loginButton}
+        onPress={() => router.push('/login')}
+      >
+        <LogIn size={24} color="#FFFFFF" />
+        <Text style={s.menuText}>Login</Text>
+      </TouchableOpacity>
+      
+      <TouchableOpacity style={s.menuItem}>
+        <Image size={24} color="#FFFFFF" />
+        <Text style={s.menuText}>My Images</Text>
+      </TouchableOpacity>
+      
+      <TouchableOpacity style={s.menuItem}>
+        <Settings size={24} color="#FFFFFF" />
+        <Text style={s.menuText}>Settings</Text>
+      </TouchableOpacity>
+      
+      <TouchableOpacity style={s.menuItem}>
+        <Globe size={24} color="#FFFFFF" />
+        <Text style={s.menuText}>Web Site</Text>
+      </TouchableOpacity>
+      
+      <TouchableOpacity style={s.menuItem}>
+        <Info size={24} color="#FFFFFF" />
+        <Text style={s.menuText}>Hakkında</Text>
+      </TouchableOpacity>
+    </>
+  );
 
   return (
     <Modal
       visible={visible}
       transparent={true}
-      animationType="fade"
+      animationType="none"
       onRequestClose={onClose}
     >
       <View style={s.overlay}>
-        <View style={s.menuContainer}>
-          <View style={s.header}>
-            <TouchableOpacity onPress={onClose} style={s.closeButton}>
-              <X color="#FFFFFF" size={24} />
-            </TouchableOpacity>
-          </View>
+        <View style={[s.menuContainer, { right: visible ? '20%' : '100%' }]}>
+          <TouchableOpacity 
+            style={s.closeButton}
+            onPress={onClose}
+          >
+            <X color="#FFFFFF" size={24} />
+          </TouchableOpacity>
           
-          {menuItems.map((item, index) => (
-            <TouchableOpacity 
-              key={index} 
-              style={[s.menuItem, item.onPress && s.clickableItem]}
-              onPress={() => {
-                if (item.onPress) {
-                  item.onPress();
-                } else {
-                  console.log(`${item.title} pressed`);
-                }
-                onClose();
-              }}
-            >
-              <View style={s.iconContainer}>
-                {item.icon}
-              </View>
-              <Text style={s.menuItemText}>{item.title}</Text>
-            </TouchableOpacity>
-          ))}
+          {isAuthenticated ? renderAuthenticatedContent() : renderUnauthenticatedContent()}
         </View>
       </View>
     </Modal>
@@ -78,43 +101,65 @@ const s = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   menuContainer: {
-    width: '70%',
+    position: 'absolute',
+    top: 0,
+    right: '100%',
+    width: '80%',
     height: '100%',
     backgroundColor: '#262626',
-    padding: 16,
-  },
-  header: {
-    marginBottom: 20,
-    alignItems: 'flex-end',
+    padding: 20,
   },
   closeButton: {
+    alignSelf: 'flex-end',
     padding: 8,
+    marginBottom: 20,
+  },
+  userInfo: {
+    marginBottom: 30,
+  },
+  userName: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  userEmail: {
+    color: '#A3A3A3',
+    fontSize: 14,
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
-    borderRadius: 12,
     marginBottom: 8,
-    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+    borderRadius: 8,
+    backgroundColor: '#333333',
   },
-  clickableItem: {
-    backgroundColor: 'rgba(139, 92, 246, 0.2)',
-  },
-  iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#8B5CF6',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  menuItemText: {
+  menuText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '500',
+    marginLeft: 12,
   },
+  loginButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    marginBottom: 30,
+    borderRadius: 8,
+    backgroundColor: '#8B5CF6',
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    marginTop: 'auto',
+    borderRadius: 8,
+    backgroundColor: '#DC2626',
+  },
+  logoutText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    marginLeft: 12,
+  }
 });
 
 export default DrawerMenu;
