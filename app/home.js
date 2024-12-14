@@ -16,7 +16,6 @@ import ProModal from './components/ProModal';
 import DrawerMenu from './components/DrawerMenu';
 import LoadingModal from './components/LoadingModal';
 import ResultModal from './components/ResultModal';
-import Profile from './components/Profile';
 
 // Services
 import { generateImage } from './services/api';
@@ -26,11 +25,13 @@ export default function Home() {
   const [selectedStyle, setSelectedStyle] = useState(null);
   const [isProModalVisible, setIsProModalVisible] = useState(false);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [generatedImageUrl, setGeneratedImageUrl] = useState(null);
   const [showResult, setShowResult] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+  
+  const router = useRouter();
 
   useEffect(() => {
     initializeLanguage();
@@ -40,6 +41,9 @@ export default function Home() {
   const checkAuth = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     setIsAuthenticated(!!user);
+    if (user) {
+      setUserEmail(user.email);
+    }
   };
 
   const handleCreatePress = async () => {
@@ -104,8 +108,8 @@ export default function Home() {
       <DrawerMenu 
         visible={isMenuVisible} 
         onClose={() => setIsMenuVisible(false)}
-        onSettingsPress={handleSettingsPress}
         isAuthenticated={isAuthenticated}
+        userEmail={userEmail}
       />
 
       <ProModal
@@ -118,12 +122,11 @@ export default function Home() {
       <ResultModal
         visible={showResult}
         imageUrl={generatedImageUrl}
+        prompt={prompt}
+        style={selectedStyle}
         onClose={() => {
           setShowResult(false);
           setGeneratedImageUrl(null);
-        }}
-        onSave={() => {
-          console.log('Saving image:', generatedImageUrl);
         }}
       />
     </SafeAreaView>
@@ -153,4 +156,4 @@ const s = StyleSheet.create({
   menuButton: {
     padding: 8,
   }
-});
+});a

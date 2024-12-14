@@ -25,9 +25,9 @@ const AuthButton = ({ title, onPress, style, icon, disabled }) => (
   </TouchableOpacity>
 );
 
-const SocialButton = ({ icon, title, onPress, style }) => (
+const SocialButton = ({ children, title, onPress, style }) => (
   <TouchableOpacity style={[styles.socialButton, style]} onPress={onPress}>
-    {icon}
+    {children}
     <Text style={styles.socialButtonText}>{title}</Text>
   </TouchableOpacity>
 );

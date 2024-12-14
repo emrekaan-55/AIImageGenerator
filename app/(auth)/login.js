@@ -1,10 +1,15 @@
+// app/(auth)/login.js
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ArrowLeft, Google } from 'lucide-react-native';
-import supabase from '../lib/supabaseClient';
+import supabase from '../../lib/supabaseClient';
+
+// AuthComponents'ı düzgün şekilde import edelim
 import { AuthInput, AuthButton, SocialButton } from '../components/auth/AuthComponents';
+// Eğer default export kullanıyorsanız:
+// import AuthComponents, { AuthInput, AuthButton, SocialButton } from '../../components/auth/AuthComponents';
 
 export default function Login() {
   const router = useRouter();
@@ -14,7 +19,7 @@ export default function Login() {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('Error', 'Please fill in all fields');
+      Alert.alert('Hata', 'Lütfen tüm alanları doldurun');
       return;
     }
 
@@ -28,7 +33,7 @@ export default function Login() {
       if (error) throw error;
       router.replace('/home');
     } catch (error) {
-      Alert.alert('Error', error.message);
+      Alert.alert('Hata', error.message);
     } finally {
       setLoading(false);
     }
@@ -43,7 +48,7 @@ export default function Login() {
           style={styles.backButton}
           icon={<ArrowLeft color="#FFFFFF" size={24} />}
         />
-        <Text style={styles.headerTitle}>Login</Text>
+        <Text style={styles.headerTitle}>Giriş Yap</Text>
       </View>
 
       <View style={styles.content}>
@@ -51,36 +56,39 @@ export default function Login() {
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
+          autoCapitalize="none"
+          keyboardType="email-address"
         />
         <AuthInput
-          placeholder="Password"
+          placeholder="Şifre"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
         />
 
         <AuthButton
-          title={loading ? "Loading..." : "Login"}
+          title={loading ? "Giriş yapılıyor..." : "Giriş Yap"}
           onPress={handleLogin}
           disabled={loading}
         />
 
         <View style={styles.divider}>
           <View style={styles.dividerLine} />
-          <Text style={styles.dividerText}>OR</Text>
+          <Text style={styles.dividerText}>VEYA</Text>
           <View style={styles.dividerLine} />
         </View>
 
         <SocialButton
-          Text={<Google size={24} color="#FFFFFF" />}
-          title="Continue with Google"
           onPress={() => {/* Google login logic */}}
-        />
+          title="Google ile Devam Et"
+        >
+          <Google size={24} color="#FFFFFF" />
+        </SocialButton>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Don't have an account? </Text>
+          <Text style={styles.footerText}>Hesabınız yok mu? </Text>
           <AuthButton
-            title="Sign Up"
+            title="Kayıt Ol"
             onPress={() => router.push('/register')}
             style={styles.linkButton}
           />
