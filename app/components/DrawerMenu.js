@@ -26,7 +26,7 @@ const DrawerMenu = ({ visible, onClose, isAuthenticated }) => {
             style={s.loginButton}
             onPress={() => {
               onClose();
-              router.push('/login');
+              router.push('/auth/login');
             }}
           >
             <LogIn size={24} color="#FFFFFF" />

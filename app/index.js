@@ -44,7 +44,7 @@ export default function Index() {
       <View style={s.buttonsContainer}>
         <TouchableOpacity 
           style={[s.button, s.primaryButton]}
-          onPress={() => router.push('/login')}
+          onPress={() => router.push('/(auth)/login')}
         >
           <LogIn color="#FFFFFF" size={20} style={s.buttonIcon} />
           <Text style={s.buttonText}>Login</Text>
@@ -52,7 +52,7 @@ export default function Index() {
 
         <TouchableOpacity 
           style={[s.button, s.secondaryButton]}
-          onPress={() => router.push('/register')}
+          onPress={() => router.push('/(auth)/register')}
         >
           <UserPlus color="#8B5CF6" size={20} style={s.buttonIcon} />
           <Text style={[s.buttonText, s.secondaryButtonText]}>Sign Up</Text>
