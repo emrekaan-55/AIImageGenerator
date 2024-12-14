@@ -2,35 +2,41 @@
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
-export const AuthInput = ({ placeholder, value, onChangeText, secureTextEntry = false }) => (
-  <TextInput
-    style={styles.input}
-    placeholder={placeholder}
-    placeholderTextColor="#666"
-    value={value}
-    onChangeText={onChangeText}
-    secureTextEntry={secureTextEntry}
-    autoCapitalize="none"
-  />
-);
+const AuthInput = ({ placeholder, value, onChangeText, secureTextEntry = false }) => {
+  return (
+    <TextInput
+      style={styles.input}
+      placeholder={placeholder}
+      placeholderTextColor="#666"
+      value={value}
+      onChangeText={onChangeText}
+      secureTextEntry={secureTextEntry}
+      autoCapitalize="none"
+    />
+  );
+};
 
-export const AuthButton = ({ title, onPress, style, icon, disabled }) => (
-  <TouchableOpacity 
-    style={[styles.button, style, disabled && styles.disabledButton]} 
-    onPress={onPress}
-    disabled={disabled}
-  >
-    {icon && <View style={styles.iconContainer}>{icon}</View>}
-    {typeof title === 'string' ? <Text style={styles.buttonText}>{title}</Text> : title}
-  </TouchableOpacity>
-);
+const AuthButton = ({ title, onPress, style, icon, disabled }) => {
+  return (
+    <TouchableOpacity 
+      style={[styles.button, style, disabled && styles.disabledButton]} 
+      onPress={onPress}
+      disabled={disabled}
+    >
+      {icon && <View style={styles.iconContainer}>{icon}</View>}
+      <Text style={styles.buttonText}>{typeof title === 'string' ? title : ''}</Text>
+    </TouchableOpacity>
+  );
+};
 
-export const SocialButton = ({ icon, title, onPress, style }) => (
-  <TouchableOpacity style={[styles.socialButton, style]} onPress={onPress}>
-    {icon}
-    <Text style={styles.socialButtonText}>{title}</Text>
-  </TouchableOpacity>
-);
+const SocialButton = ({ icon, title, onPress, style }) => {
+  return (
+    <TouchableOpacity style={[styles.socialButton, style]} onPress={onPress}>
+      {icon && <View style={styles.iconContainer}>{icon}</View>}
+      <Text style={styles.socialButtonText}>{title}</Text>
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
   input: {
@@ -50,13 +56,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
   },
+  disabledButton: {
+    opacity: 0.5,
+  },
   buttonText: {
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '600',
-  },
-  disabledButton: {
-    opacity: 0.5,
   },
   iconContainer: {
     marginRight: 8,
@@ -78,8 +84,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default {
-  AuthInput,
-  AuthButton,
-  SocialButton
-};
+export { AuthInput, AuthButton, SocialButton };

@@ -3,18 +3,17 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { ArrowLeft } from 'lucide-react-native';
-import { Google } from 'lucide-react-native';
+import { ArrowLeft, Google } from 'lucide-react-native';
 import supabase from '../lib/supabaseClient';
+// Import'u düzeltiyoruz
 import { AuthInput, AuthButton, SocialButton } from '../components/auth/AuthComponents';
 
-export default function RegisterScreen() {
+export default function Register() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
-
 
   const handleRegister = async () => {
     if (!email || !password || !confirmPassword) {
@@ -37,9 +36,9 @@ export default function RegisterScreen() {
       if (error) throw error;
 
       Alert.alert(
-        'Registration Successful',
-        'Please check your email for verification.',
-        [{ text: 'OK', onPress: () => router.replace('/(auth)/login') }]
+        'Success',
+        'Registration successful! Please check your email to verify your account.',
+        [{ text: 'OK', onPress: () => router.push('/(auth)/login') }]
       );
     } catch (error) {
       Alert.alert('Error', error.message);
@@ -52,7 +51,7 @@ export default function RegisterScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <AuthButton
-          title="Back"
+          title=""
           onPress={() => router.back()}
           style={styles.backButton}
           icon={<ArrowLeft color="#FFFFFF" size={24} />}
@@ -80,7 +79,7 @@ export default function RegisterScreen() {
         />
 
         <AuthButton
-          title={loading ? "Loading..." : "Create Account"}
+          title={loading ? "Creating Account..." : "Create Account"}
           onPress={handleRegister}
           disabled={loading}
         />
@@ -94,8 +93,17 @@ export default function RegisterScreen() {
         <SocialButton
           icon={<Google size={24} color="#FFFFFF" />}
           title="Continue with Google"
-          onPress={() => console.log('Google sign up')}
+          onPress={() => {/* Google login logic */}}
         />
+
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>Already have an account? </Text>
+          <AuthButton
+            title="Login"
+            onPress={() => router.push('/(auth)/login')}
+            style={styles.linkButton}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -139,5 +147,18 @@ const styles = StyleSheet.create({
     color: '#666',
     paddingHorizontal: 16,
   },
+  footer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 24,
+  },
+  footerText: {
+    color: '#666',
+  },
+  linkButton: {
+    backgroundColor: 'transparent',
+    marginBottom: 0,
+    paddingHorizontal: 8,
+  },
 });
-

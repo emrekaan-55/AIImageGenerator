@@ -7,7 +7,7 @@ import { ArrowLeft, Google } from 'lucide-react-native';
 import supabase from '../lib/supabaseClient';
 import { AuthInput, AuthButton, SocialButton } from '../components/auth/AuthComponents';
 
-export default function LoginScreen() {
+export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
