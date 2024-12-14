@@ -15,39 +15,40 @@ const DrawerMenu = ({ visible, onClose, isAuthenticated }) => {
     >
       <View style={s.overlay}>
         <View style={[s.menuContainer, { right: visible ? '20%' : '100%' }]}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={s.closeButton}
             onPress={onClose}
           >
             <X color="#FFFFFF" size={24} />
           </TouchableOpacity>
 
-          <TouchableOpacity 
+          <TouchableOpacity
             style={s.loginButton}
+
             onPress={() => {
               onClose();
-              router.push('/auth/login');
+              router.push('/(auth)/login');
             }}
           >
             <LogIn size={24} color="#FFFFFF" />
             <Text style={s.menuText}>Login</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity style={s.menuItem}>
             <Image size={24} color="#FFFFFF" />
             <Text style={s.menuText}>My Images</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity style={s.menuItem}>
             <Settings size={24} color="#FFFFFF" />
             <Text style={s.menuText}>Settings</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity style={s.menuItem}>
             <Globe size={24} color="#FFFFFF" />
             <Text style={s.menuText}>Web Site</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity style={s.menuItem}>
             <Info size={24} color="#FFFFFF" />
             <Text style={s.menuText}>Hakkında</Text>

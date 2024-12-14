@@ -8,10 +8,10 @@ import supabase from '../lib/supabaseClient';
 import { AuthInput, AuthButton, SocialButton } from '../components/auth/AuthComponents';
 
 export default function Login() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -27,7 +27,6 @@ export default function Login() {
       });
 
       if (error) throw error;
-      
       router.replace('/home');
     } catch (error) {
       Alert.alert('Error', error.message);
@@ -40,7 +39,7 @@ export default function Login() {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <AuthButton
-          title="Back"
+          title=""
           onPress={() => router.back()}
           style={styles.backButton}
           icon={<ArrowLeft color="#FFFFFF" size={24} />}
@@ -76,14 +75,14 @@ export default function Login() {
         <SocialButton
           icon={<Google size={24} color="#FFFFFF" />}
           title="Continue with Google"
-          onPress={() => console.log('Google login')}
+          onPress={() => {/* Google login logic */}}
         />
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>Don't have an account? </Text>
           <AuthButton
             title="Sign Up"
-            onPress={() => router.push('/(auth)/register')}
+            onPress={() => router.push('/register')}
             style={styles.linkButton}
           />
         </View>
