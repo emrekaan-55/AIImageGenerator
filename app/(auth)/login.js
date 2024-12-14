@@ -1,4 +1,3 @@
-// app/(auth)/login.js
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -73,7 +72,7 @@ export default function Login() {
         </View>
 
         <SocialButton
-          icon={<Google size={24} color="#FFFFFF" />}
+          Text={<Google size={24} color="#FFFFFF" />}
           title="Continue with Google"
           onPress={() => {/* Google login logic */}}
         />

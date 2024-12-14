@@ -91,7 +91,7 @@ export default function Register() {
         </View>
 
         <SocialButton
-          icon={<Google size={24} color="#FFFFFF" />}
+          text={<Google size={24} color="#FFFFFF" />}
           title="Continue with Google"
           onPress={() => {/* Google login logic */}}
         />
