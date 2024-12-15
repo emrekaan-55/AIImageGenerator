@@ -6,11 +6,6 @@ import { useRouter } from 'expo-router';
 const DrawerMenu = ({ visible, onClose, isAuthenticated }) => {
   const router = useRouter();
 
-  const handleNavigation = (route) => {
-    onClose();
-    router.push(route);
-  };
-
   return (
     <Modal
       visible={visible}
@@ -20,51 +15,40 @@ const DrawerMenu = ({ visible, onClose, isAuthenticated }) => {
     >
       <View style={s.overlay}>
         <View style={[s.menuContainer, { right: visible ? '20%' : '100%' }]}>
-          <TouchableOpacity
+          <TouchableOpacity 
             style={s.closeButton}
             onPress={onClose}
           >
             <X color="#FFFFFF" size={24} />
           </TouchableOpacity>
 
-          {!isAuthenticated && (
-            <TouchableOpacity
-              style={s.loginButton}
-              onPress={() => handleNavigation('/(auth)/login')}
-            >
-              <LogIn size={24} color="#FFFFFF" />
-              <Text style={s.menuText}>Giriş Yap</Text>
-            </TouchableOpacity>
-          )}
-
           <TouchableOpacity 
-            style={s.menuItem}
-            onPress={() => handleNavigation('/screens/MyImages')}
+            style={s.loginButton}
+            onPress={() => {
+              onClose();
+              router.push('/login');
+            }}
           >
+            <LogIn size={24} color="#FFFFFF" />
+            <Text style={s.menuText}>Login</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={s.menuItem}>
             <Image size={24} color="#FFFFFF" />
-            <Text style={s.menuText}>Görsellerim</Text>
+            <Text style={s.menuText}>My Images</Text>
           </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={s.menuItem}
-            onPress={() => handleNavigation('/settings')}
-          >
+          
+          <TouchableOpacity style={s.menuItem}>
             <Settings size={24} color="#FFFFFF" />
-            <Text style={s.menuText}>Ayarlar</Text>
+            <Text style={s.menuText}>Settings</Text>
           </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={s.menuItem}
-            onPress={() => handleNavigation('/website')}
-          >
+          
+          <TouchableOpacity style={s.menuItem}>
             <Globe size={24} color="#FFFFFF" />
-            <Text style={s.menuText}>Web Sitesi</Text>
+            <Text style={s.menuText}>Web Site</Text>
           </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={s.menuItem}
-            onPress={() => handleNavigation('/about')}
-          >
+          
+          <TouchableOpacity style={s.menuItem}>
             <Info size={24} color="#FFFFFF" />
             <Text style={s.menuText}>Hakkında</Text>
           </TouchableOpacity>

@@ -1,36 +1,9 @@
 // app/components/ResultModal.js
 import React from 'react';
-import { Modal, View, Image, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
+import { Modal, View, Image, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { X, Download } from 'lucide-react-native';
-import supabase from '../lib/supabaseClient';
 
-const ResultModal = ({ visible, imageUrl, onClose, prompt, style }) => {
-  const saveImage = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        Alert.alert('Hata', 'Görsel kaydetmek için lütfen giriş yapın');
-        return;
-      }
-
-      const { error } = await supabase
-        .from('saved_images')
-        .insert({
-          user_id: user.id,
-          image_url: imageUrl,
-          prompt: prompt,
-          style: style
-        });
-
-      if (error) throw error;
-      Alert.alert('Başarılı', 'Görsel başarıyla kaydedildi');
-    } catch (error) {
-      Alert.alert('Hata', 'Görsel kaydedilirken bir sorun oluştu');
-      console.error('Error saving image:', error);
-    }
-  };
-
+const ResultModal = ({ visible, imageUrl, onClose, onSave }) => {
   return (
     <Modal
       visible={visible}
@@ -51,9 +24,9 @@ const ResultModal = ({ visible, imageUrl, onClose, prompt, style }) => {
             />
           )}
 
-          <TouchableOpacity style={s.saveButton} onPress={saveImage}>
+          <TouchableOpacity style={s.saveButton} onPress={onSave}>
             <Download color="#FFFFFF" size={24} />
-            <Text style={s.saveButtonText}>Görseli Kaydet</Text>
+            <Text style={s.saveButtonText}>Save Image</Text>
           </TouchableOpacity>
         </View>
       </View>

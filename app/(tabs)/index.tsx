@@ -1,155 +1,74 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, StatusBar, TouchableOpacity, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
-import { Settings, Menu } from 'lucide-react-native';
+import { Image, StyleSheet, Platform } from 'react-native';
 
-// Import yollarını düzelttim
-import i18n, { initializeLanguage } from '../utils/i18n';
-import supabase from '../lib/supabaseClient';
-
-// Components
-import StyleSelector from '../components/StyleSelector';
-import PromptInput from '../components/PromptInput';
-import ProButton from '../components/ProButton';
-import CreateButton from '../components/CreateButton';
-import ProModal from '../components/ProModal';
-import DrawerMenu from '../components/DrawerMenu';
-import LoadingModal from '../components/LoadingModal';
-import ResultModal from '../components/ResultModal';
-
-// Services
-import { generateImage } from '../services/api';
+import { HelloWave } from '@/components/HelloWave';
+import ParallaxScrollView from '@/components/ParallaxScrollView';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
 
 export default function HomeScreen() {
-  const [prompt, setPrompt] = useState('');
-  const [selectedStyle, setSelectedStyle] = useState(null);
-  const [isProModalVisible, setIsProModalVisible] = useState(false);
-  const [isMenuVisible, setIsMenuVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [generatedImageUrl, setGeneratedImageUrl] = useState(null);
-  const [showResult, setShowResult] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userEmail, setUserEmail] = useState('');
-  
-  const router = useRouter();
-
-  useEffect(() => {
-    initializeLanguage();
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    setIsAuthenticated(!!user);
-    if (user) {
-      setUserEmail(user.email);
-    }
-  };
-
-  const handleCreatePress = async () => {
-    if (!prompt.trim()) {
-      Alert.alert('Error', 'Please enter a prompt');
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-      const imageUrl = await generateImage(prompt, selectedStyle);
-      setGeneratedImageUrl(imageUrl);
-      setShowResult(true);
-    } catch (error) {
-      Alert.alert('Error', 'Failed to generate image. Please try again.');
-      console.error('Error in handleCreatePress:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleProPress = () => {
-    setIsProModalVisible(true);
-  };
-
   return (
-    <SafeAreaView style={s.container}>
-      <StatusBar barStyle="light-content" />
-  
-      <View style={s.header}>
-        <TouchableOpacity 
-          onPress={() => setIsMenuVisible(true)}
-          style={s.menuButton}
-        >
-          <Menu color="#FFFFFF" size={24} />
-        </TouchableOpacity>
-        <Text style={s.headerTitle}>{i18n.t('appName')}</Text>
-        <ProButton onPress={handleProPress} />
-      </View>
-
-      <ScrollView style={s.content}>
-        <PromptInput 
-          value={prompt}
-          onChangeText={setPrompt}
-          placeholder={i18n.t('prompt.placeholder')}
+    <ParallaxScrollView
+      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
+      headerImage={
+        <Image
+          source={require('@/assets/images/partial-react-logo.png')}
+          style={styles.reactLogo}
         />
-        <StyleSelector 
-          selectedStyle={selectedStyle}
-          onStyleSelect={setSelectedStyle}
-        />
-        <CreateButton 
-          onPress={handleCreatePress}
-          disabled={!prompt.trim() || !selectedStyle}
-        />
-      </ScrollView>
-
-      <DrawerMenu 
-        visible={isMenuVisible} 
-        onClose={() => setIsMenuVisible(false)}
-        isAuthenticated={isAuthenticated}
-        userEmail={userEmail}
-      />
-
-      <ProModal
-        visible={isProModalVisible}
-        onClose={() => setIsProModalVisible(false)}
-      />
-
-      <LoadingModal visible={isLoading} />
-
-      <ResultModal
-        visible={showResult}
-        imageUrl={generatedImageUrl}
-        prompt={prompt}
-        style={selectedStyle}
-        onClose={() => {
-          setShowResult(false);
-          setGeneratedImageUrl(null);
-        }}
-      />
-    </SafeAreaView>
+      }>
+      <ThemedView style={styles.titleContainer}>
+        <ThemedText type="title">Welcome!</ThemedText>
+        <HelloWave />
+      </ThemedView>
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
+        <ThemedText>
+          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
+          Press{' '}
+          <ThemedText type="defaultSemiBold">
+            {Platform.select({
+              ios: 'cmd + d',
+              android: 'cmd + m',
+              web: 'F12'
+            })}
+          </ThemedText>{' '}
+          to open developer tools.
+        </ThemedText>
+      </ThemedView>
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
+        <ThemedText>
+          Tap the Explore tab to learn more about what's included in this starter app.
+        </ThemedText>
+      </ThemedView>
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
+        <ThemedText>
+          When you're ready, run{' '}
+          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
+          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
+          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
+          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
+        </ThemedText>
+      </ThemedView>
+    </ParallaxScrollView>
   );
 }
 
-const s = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#1a1a1a',
-  },
-  header: {
+const styles = StyleSheet.create({
+  titleContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    gap: 8,
   },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
+  stepContainer: {
+    gap: 8,
+    marginBottom: 8,
   },
-  content: {
-    flex: 1,
+  reactLogo: {
+    height: 178,
+    width: 290,
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
   },
-  menuButton: {
-    padding: 8,
-  }
 });

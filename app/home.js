@@ -1,39 +1,36 @@
-// app/(tabs)/home.js
+// app/home.js
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, StatusBar, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Settings, Menu } from 'lucide-react-native';
-
-// Import yollarını düzeltelim (bulundukları konuma göre)
-import i18n, { initializeLanguage } from '../utils/i18n';
-import supabase from '../lib/supabaseClient';
+import i18n, { initializeLanguage } from './utils/i18n';
+import supabase from './lib/supabaseClient';
 
 // Components
-import StyleSelector from '../components/StyleSelector';
-import PromptInput from '../components/PromptInput';
-import ProButton from '../components/ProButton';
-import CreateButton from '../components/CreateButton';
-import ProModal from '../components/ProModal';
-import DrawerMenu from '../components/DrawerMenu';
-import LoadingModal from '../components/LoadingModal';
-import ResultModal from '../components/ResultModal';
+import StyleSelector from './components/StyleSelector';
+import PromptInput from './components/PromptInput';
+import ProButton from './components/ProButton';
+import CreateButton from './components/CreateButton';
+import ProModal from './components/ProModal';
+import DrawerMenu from './components/DrawerMenu';
+import LoadingModal from './components/LoadingModal';
+import ResultModal from './components/ResultModal';
+import Profile from './components/Profile';
 
 // Services
-import { generateImage } from '../services/api';
+import { generateImage } from './services/api';
 
 export default function Home() {
   const [prompt, setPrompt] = useState('');
   const [selectedStyle, setSelectedStyle] = useState(null);
   const [isProModalVisible, setIsProModalVisible] = useState(false);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [generatedImageUrl, setGeneratedImageUrl] = useState(null);
   const [showResult, setShowResult] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userEmail, setUserEmail] = useState('');
-  
-  const router = useRouter();
 
   useEffect(() => {
     initializeLanguage();
@@ -43,9 +40,6 @@ export default function Home() {
   const checkAuth = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     setIsAuthenticated(!!user);
-    if (user) {
-      setUserEmail(user.email);
-    }
   };
 
   const handleCreatePress = async () => {
@@ -56,6 +50,7 @@ export default function Home() {
 
     try {
       setIsLoading(true);
+      console.log('Starting image generation...');
       const imageUrl = await generateImage(prompt, selectedStyle);
       setGeneratedImageUrl(imageUrl);
       setShowResult(true);
@@ -69,6 +64,10 @@ export default function Home() {
 
   const handleProPress = () => {
     setIsProModalVisible(true);
+  };
+
+  const handleSettingsPress = () => {
+    router.push('/settings');
   };
 
   return (
@@ -105,8 +104,8 @@ export default function Home() {
       <DrawerMenu 
         visible={isMenuVisible} 
         onClose={() => setIsMenuVisible(false)}
+        onSettingsPress={handleSettingsPress}
         isAuthenticated={isAuthenticated}
-        userEmail={userEmail}
       />
 
       <ProModal
@@ -119,11 +118,12 @@ export default function Home() {
       <ResultModal
         visible={showResult}
         imageUrl={generatedImageUrl}
-        prompt={prompt}
-        style={selectedStyle}
         onClose={() => {
           setShowResult(false);
           setGeneratedImageUrl(null);
+        }}
+        onSave={() => {
+          console.log('Saving image:', generatedImageUrl);
         }}
       />
     </SafeAreaView>
