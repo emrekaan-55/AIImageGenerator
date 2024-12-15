@@ -47,7 +47,7 @@ export default function Index() {
 
         <TouchableOpacity 
           style={[s.button, s.skipButton]}
-          onPress={handleContinueWithoutAccount}
+          onPress={() => router.push('/(tabs)')}  
         >
           <Text style={[s.buttonText, s.skipButtonText]}>Continue without account</Text>
         </TouchableOpacity>

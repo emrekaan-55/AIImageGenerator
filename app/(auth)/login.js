@@ -5,11 +5,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ArrowLeft, Google } from 'lucide-react-native';
 import supabase from '../lib/supabaseClient';
-
-// AuthComponents'ı düzgün şekilde import edelim
-import { AuthInput, AuthButton, SocialButton } from '../components/auth/AuthComponents';
-// Eğer default export kullanıyorsanız:
-// import AuthComponents, { AuthInput, AuthButton, SocialButton } from '../../components/auth/AuthComponents';
+import { AuthInput, AuthButton, SocialButton } from '@/app/components/auth/AuthComponents';
+import AuthComponents from '../components/auth/AuthComponents';
+const { AuthInput, AuthButton, SocialButton } = AuthComponents;
 
 export default function Login() {
   const router = useRouter();
@@ -19,7 +17,7 @@ export default function Login() {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('Hata', 'Lütfen tüm alanları doldurun');
+      Alert.alert('Error', 'Please fill in all fields');
       return;
     }
 
@@ -31,27 +29,27 @@ export default function Login() {
       });
 
       if (error) throw error;
-      router.replace('/home');
+      router.replace('/(tabs)');
     } catch (error) {
-      Alert.alert('Hata', error.message);
+      Alert.alert('Error', error.message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
+    <SafeAreaView style={s.container}>
+      <View style={s.header}>
         <AuthButton
           title=""
           onPress={() => router.back()}
-          style={styles.backButton}
+          style={s.backButton}
           icon={<ArrowLeft color="#FFFFFF" size={24} />}
         />
-        <Text style={styles.headerTitle}>Giriş Yap</Text>
+        <Text style={s.headerTitle}>Login</Text>
       </View>
 
-      <View style={styles.content}>
+      <View style={s.content}>
         <AuthInput
           placeholder="Email"
           value={email}
@@ -60,37 +58,37 @@ export default function Login() {
           keyboardType="email-address"
         />
         <AuthInput
-          placeholder="Şifre"
+          placeholder="Password"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
         />
 
         <AuthButton
-          title={loading ? "Giriş yapılıyor..." : "Giriş Yap"}
+          title={loading ? "Logging in..." : "Login"}
           onPress={handleLogin}
           disabled={loading}
         />
 
-        <View style={styles.divider}>
-          <View style={styles.dividerLine} />
-          <Text style={styles.dividerText}>VEYA</Text>
-          <View style={styles.dividerLine} />
+        <View style={s.divider}>
+          <View style={s.dividerLine} />
+          <Text style={s.dividerText}>OR</Text>
+          <View style={s.dividerLine} />
         </View>
 
         <SocialButton
           onPress={() => {/* Google login logic */}}
-          title="Google ile Devam Et"
+          title="Continue with Google"
         >
           <Google size={24} color="#FFFFFF" />
         </SocialButton>
 
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>Hesabınız yok mu? </Text>
+        <View style={s.footer}>
+          <Text style={s.footerText}>Don't have an account? </Text>
           <AuthButton
-            title="Kayıt Ol"
-            onPress={() => router.push('/register')}
-            style={styles.linkButton}
+            title="Register"
+            onPress={() => router.push('/(auth)/register')}
+            style={s.linkButton}
           />
         </View>
       </View>
@@ -98,7 +96,7 @@ export default function Login() {
   );
 }
 
-const styles = StyleSheet.create({
+const s = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#1a1a1a',
