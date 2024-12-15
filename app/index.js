@@ -2,35 +2,22 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { useRouter, Redirect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { LogIn, UserPlus } from 'lucide-react-native';
 
 export default function Index() {
-
-
-
-
-  const LoginScreen = ({ navigation }) => {
-    // ...
-  
-    const handleContinueWithoutAccount = () => {
-      navigation.navigate('Home'); // Ana sayfaya yönlendirme yapılıyor
-    };
-  
-    return (
-      <View>
-        {/* ... */}
-        <TouchableOpacity onPress={handleContinueWithoutAccount}>
-          <Text>Continue without account</Text>
-        </TouchableOpacity>
-        {/* ... */}
-      </View>
-    );
-  };
-
-
   const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Eğer kullanıcı authenticate olduysa tabs'e yönlendir
+  if (isAuthenticated) {
+    return <Redirect href="/(tabs)" />;
+  }
+
+  const handleContinueWithoutAccount = () => {
+    router.push('/(tabs)'); // Tab navigasyonuna yönlendir
+  };
 
   return (
     <SafeAreaView style={s.container}>
@@ -60,7 +47,7 @@ export default function Index() {
 
         <TouchableOpacity 
           style={[s.button, s.skipButton]}
-          onPress={() => router.push('home')}
+          onPress={handleContinueWithoutAccount}
         >
           <Text style={[s.buttonText, s.skipButtonText]}>Continue without account</Text>
         </TouchableOpacity>

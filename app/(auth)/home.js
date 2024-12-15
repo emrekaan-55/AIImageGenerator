@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Settings, Menu } from 'lucide-react-native';
 
-// Import yollarını tek üst dizine göre düzeltelim
+// Import yollarını düzeltelim (bulundukları konuma göre)
 import i18n, { initializeLanguage } from '../utils/i18n';
 import supabase from '../lib/supabaseClient';
 
@@ -21,8 +21,6 @@ import ResultModal from '../components/ResultModal';
 
 // Services
 import { generateImage } from '../services/api';
-
-// ... geri kalan kod aynı kalacak
 
 export default function Home() {
   const [prompt, setPrompt] = useState('');
@@ -58,7 +56,6 @@ export default function Home() {
 
     try {
       setIsLoading(true);
-      console.log('Starting image generation...');
       const imageUrl = await generateImage(prompt, selectedStyle);
       setGeneratedImageUrl(imageUrl);
       setShowResult(true);
@@ -72,10 +69,6 @@ export default function Home() {
 
   const handleProPress = () => {
     setIsProModalVisible(true);
-  };
-
-  const handleSettingsPress = () => {
-    router.push('/settings');
   };
 
   return (
@@ -160,4 +153,4 @@ const s = StyleSheet.create({
   menuButton: {
     padding: 8,
   }
-});a
+});
