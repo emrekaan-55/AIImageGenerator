@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ArrowLeft, Google } from 'lucide-react-native';
-import supabase from '../../lib/supabaseClient';
+import supabase from '../lib/supabaseClient';
 
 // AuthComponents'ı düzgün şekilde import edelim
 import { AuthInput, AuthButton, SocialButton } from '../components/auth/AuthComponents';

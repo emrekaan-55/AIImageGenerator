@@ -1,24 +1,28 @@
-// app/home.js
+// app/(tabs)/home.js
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, StatusBar, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Settings, Menu } from 'lucide-react-native';
-import i18n, { initializeLanguage } from './utils/i18n';
-import supabase from './lib/supabaseClient';
+
+// Import yollarını tek üst dizine göre düzeltelim
+import i18n, { initializeLanguage } from '../utils/i18n';
+import supabase from '../lib/supabaseClient';
 
 // Components
-import StyleSelector from './components/StyleSelector';
-import PromptInput from './components/PromptInput';
-import ProButton from './components/ProButton';
-import CreateButton from './components/CreateButton';
-import ProModal from './components/ProModal';
-import DrawerMenu from './components/DrawerMenu';
-import LoadingModal from './components/LoadingModal';
-import ResultModal from './components/ResultModal';
+import StyleSelector from '../components/StyleSelector';
+import PromptInput from '../components/PromptInput';
+import ProButton from '../components/ProButton';
+import CreateButton from '../components/CreateButton';
+import ProModal from '../components/ProModal';
+import DrawerMenu from '../components/DrawerMenu';
+import LoadingModal from '../components/LoadingModal';
+import ResultModal from '../components/ResultModal';
 
 // Services
-import { generateImage } from './services/api';
+import { generateImage } from '../services/api';
+
+// ... geri kalan kod aynı kalacak
 
 export default function Home() {
   const [prompt, setPrompt] = useState('');
