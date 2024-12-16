@@ -1,35 +1,32 @@
 // app/services/api.js
-import { OPENAI_API_KEY } from '@env';
+import { DEEPAI_API_KEY } from '@env';
 
-const API_URL = 'https://api.openai.com/v1/images/generations';
+const API_URL = 'https://api.deepai.org/api/text2img';
 
 export const generateImage = async (prompt, style) => {
   try {
-    console.log('Sending request with:', { prompt, style }); // Debug için log
-    console.log('Using API Key:', OPENAI_API_KEY); // API key'in doğru geldiğinden emin olalım
+    console.log('Sending request with:', { prompt, style });
+    console.log('Using API Key:', DEEPAI_API_KEY); // API key'in doğru geldiğinden emin olmak için
+
+    const formData = new FormData();
+    formData.append('text', `${prompt} ${style ? `in ${style} style` : ''}`);
 
     const response = await fetch(API_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENAI_API_KEY}`
+        'api-key': DEEPAI_API_KEY
       },
-      body: JSON.stringify({
-        prompt: `${prompt} ${style ? `in ${style} style` : ''}`,
-        n: 1,
-        size: "1024x1024",
-        response_format: "url"
-      })
+      body: formData
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      console.error('API Error:', data); // Hata detaylarını görelim
-      throw new Error(data.error?.message || 'Image generation failed');
+      console.error('API Error:', data);
+      throw new Error(data.error || 'Image generation failed');
     }
 
-    return data.data[0].url;
+    return data.output_url;
   } catch (error) {
     console.error('Error details:', error);
     throw error;
