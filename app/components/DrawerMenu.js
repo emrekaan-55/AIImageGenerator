@@ -68,7 +68,7 @@ const DrawerMenu = ({ visible, onClose, isAuthenticated, userEmail }) => {
             style={s.menuItem}
             onPress={() => {
               onClose();
-              router.push('../MyImages');
+              router.push('/my-images'); 
             }}
           >
             <Image size={24} color="#FFFFFF" />

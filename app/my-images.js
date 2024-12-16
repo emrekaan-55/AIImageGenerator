@@ -13,7 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeft, Grid, List, Share2, Trash2 } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
-import supabase from '../lib/supabaseClient';
+import supabase from './lib/supabaseClient';
 
 export default function MyImages() {
     const router = useRouter();
