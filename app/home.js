@@ -117,7 +117,6 @@ export default function Home() {
       />
 
       <LoadingModal visible={isLoading} />
-
       <ResultModal
         visible={showResult}
         imageUrl={generatedImageUrl}
