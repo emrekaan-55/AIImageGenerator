@@ -31,6 +31,7 @@ export default function Home() {
   const [generatedImageUrl, setGeneratedImageUrl] = useState(null);
   const [showResult, setShowResult] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userEmail, setUserEmail] = useState(null);
 
   useEffect(() => {
     initializeLanguage();
@@ -40,6 +41,7 @@ export default function Home() {
   const checkAuth = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     setIsAuthenticated(!!user);
+    setUserEmail(user?.email);
   };
 
   const handleCreatePress = async () => {
@@ -106,6 +108,7 @@ export default function Home() {
         onClose={() => setIsMenuVisible(false)}
         onSettingsPress={handleSettingsPress}
         isAuthenticated={isAuthenticated}
+        userEmail={userEmail}
       />
 
       <ProModal

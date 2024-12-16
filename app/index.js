@@ -1,36 +1,20 @@
-// app/index.js
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { LogIn, UserPlus } from 'lucide-react-native';
+import AuthModal from './components/AuthModal';
 
 export default function Index() {
-
-
-
-
-  const LoginScreen = ({ navigation }) => {
-    // ...
-  
-    const handleContinueWithoutAccount = () => {
-      navigation.navigate('Home'); // Ana sayfaya yönlendirme yapılıyor
-    };
-  
-    return (
-      <View>
-        {/* ... */}
-        <TouchableOpacity onPress={handleContinueWithoutAccount}>
-          <Text>Continue without account</Text>
-        </TouchableOpacity>
-        {/* ... */}
-      </View>
-    );
-  };
-
-
+  const [authModalVisible, setAuthModalVisible] = useState(false);
+  const [initialMode, setInitialMode] = useState('login'); // 'login' or 'register'
   const router = useRouter();
+
+  const handleAuthButton = (mode) => {
+    setInitialMode(mode);
+    setAuthModalVisible(true);
+  };
 
   return (
     <SafeAreaView style={s.container}>
@@ -44,7 +28,7 @@ export default function Index() {
       <View style={s.buttonsContainer}>
         <TouchableOpacity 
           style={[s.button, s.primaryButton]}
-          onPress={() => router.push('/login')}
+          onPress={() => handleAuthButton('login')}
         >
           <LogIn color="#FFFFFF" size={20} style={s.buttonIcon} />
           <Text style={s.buttonText}>Login</Text>
@@ -52,7 +36,7 @@ export default function Index() {
 
         <TouchableOpacity 
           style={[s.button, s.secondaryButton]}
-          onPress={() => router.push('/register')}
+          onPress={() => handleAuthButton('register')}
         >
           <UserPlus color="#8B5CF6" size={20} style={s.buttonIcon} />
           <Text style={[s.buttonText, s.secondaryButtonText]}>Sign Up</Text>
@@ -62,9 +46,17 @@ export default function Index() {
           style={[s.button, s.skipButton]}
           onPress={() => router.push('/home')}
         >
-          <Text style={[s.buttonText, s.skipButtonText]}>Continue without account</Text>
+          <Text style={[s.buttonText, s.skipButtonText]}>
+            Continue without account
+          </Text>
         </TouchableOpacity>
       </View>
+
+      <AuthModal 
+        visible={authModalVisible}
+        onClose={() => setAuthModalVisible(false)}
+        initialMode={initialMode}
+      />
     </SafeAreaView>
   );
 }
