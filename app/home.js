@@ -75,9 +75,9 @@ export default function Home() {
   return (
     <SafeAreaView style={s.container}>
       <StatusBar barStyle="light-content" />
-  
+
       <View style={s.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={() => setIsMenuVisible(true)}
           style={s.menuButton}
         >
@@ -88,23 +88,23 @@ export default function Home() {
       </View>
 
       <ScrollView style={s.content}>
-        <PromptInput 
+        <PromptInput
           value={prompt}
           onChangeText={setPrompt}
           placeholder={i18n.t('prompt.placeholder')}
         />
-        <StyleSelector 
+        <StyleSelector
           selectedStyle={selectedStyle}
           onStyleSelect={setSelectedStyle}
         />
-        <CreateButton 
+        <CreateButton
           onPress={handleCreatePress}
           disabled={!prompt.trim() || !selectedStyle}
         />
       </ScrollView>
 
-      <DrawerMenu 
-        visible={isMenuVisible} 
+      <DrawerMenu
+        visible={isMenuVisible}
         onClose={() => setIsMenuVisible(false)}
         onSettingsPress={handleSettingsPress}
         isAuthenticated={isAuthenticated}
@@ -121,12 +121,11 @@ export default function Home() {
       <ResultModal
         visible={showResult}
         imageUrl={generatedImageUrl}
+        prompt={prompt}
+        selectedStyle={selectedStyle}
         onClose={() => {
           setShowResult(false);
           setGeneratedImageUrl(null);
-        }}
-        onSave={() => {
-          console.log('Saving image:', generatedImageUrl);
         }}
       />
     </SafeAreaView>
